@@ -24,7 +24,7 @@ public class ArchDBS {
             Class.forName("com.ibm.db2.jcc.DB2Driver");
             Connection connection = DriverManager.getConnection("jdbc:db2://localhost:50000/archdbs", "db2inst1", "hda");
             connection.close();
-            // Test
+            // Test 2
         } catch (Exception e) {
             e.printStackTrace();
         }
