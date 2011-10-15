@@ -1,0 +1,38 @@
+%Erzeugt mit dem LaTeX-Generator: http://latex.sehnot.de
+
+%Schriftgröße, Layout, Papierformat, Art des Dokumentes
+\documentclass[10pt,oneside,a4paper]{scrreprt}
+
+%Einstellungen der Seitenränder
+\usepackage[left=3cm,right=4cm,top=3cm,bottom=6cm,includeheadfoot]{geometry}
+
+%neue Rechtschreibung
+\usepackage{ngerman}
+
+%Umlaute ermöglichen
+\usepackage[latin1]{inputenc}
+
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+%Kopfzeile rechts bzw. außen
+\fancyhead[R]{\today}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+%Fußzeile mittig
+\fancyfoot[C]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+
+\begin{document}
+
+\chapter{Einleitung}
+\chapter{Vorbereitung}
+\chapter{Durchführung}
+\chapter{Ergebnisse und Auswertung}
+\chapter{Zusammenfassung}
+
+\end{document}
