@@ -51,7 +51,7 @@ public class ArchDBS {
                 pStmt_Produkt.setDouble(3, i);
                 pStmt_Produkt.execute();
             }
-            connection.commit();
+            
             // Create all 'Bestellung'
             for(int i=1;i<=750000;i++) {
                 pStmt_Bestellung.setInt(1, i);
@@ -60,11 +60,9 @@ public class ArchDBS {
                 pStmt_Bestellung.setDate(4, new Date(2011,10,17));
                 pStmt_Bestellung.setInt(5, 1);//i%2);
                 pStmt_Bestellung.execute();
-                if ((i%50000)==0)
-                    connection.commit();
             }
             
-            
+            connection.commit();
             connection.close();
             
             System.out.println("Ergebnis: " + (System.currentTimeMillis() - startTime));
