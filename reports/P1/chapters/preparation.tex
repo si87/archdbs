@@ -1,0 +1,29 @@
+\chapter{Vorbereitung}
+Im Laufe des erstens Praktikums muss die Datenbank mit Testdaten befüllt werden. Im Vorfeld soll dabei die Größe der Datenbank geschätzt werden, nachdem die Daten erzeugt und gespeichert worden sind. 
+Dabei wurde mit Hilfe folgender Tabelle [ToDo:cite] die Größe eines Datensatzes ermittelt und mit der Anzahl der zu schreibenden Datensätze multipliziert.
+
+Die folgende Auflistung zeigt die Hochrechnung für die drei Tabellen \texttt{Kunde}, \texttt{Produkt} und \texttt{Bestellung} an.\\
+
+\begin{tabular}{|l|l|r|} \hline\hline
+\multicolumn{3}{|l|}{ \textbf{Kunde}}\\
+Spaltenname & Typ & Byte Count\\
+\hline 
+KNR & Integer & 4 Byte\\
+KNAME & Char & 20 Byte \\ 
+KVORNAME & Char & 15 Byte \\ \hline
+\multicolumn{2}{|r}{} & 100 x 39 Byte\\
+\multicolumn{2}{|r}{} & = 3900 Byte \\ \hline
+\end{tabular}
+
+
+\begin{tabular}{|l|l|r|} \hline\hline
+\textbf{Typ} & \multicolumn{2}{c|}{\textbf{Stil}}\\
+\hline
+ausgekocht & pink & klein\arrayrulewidth2pt\vline\\
+\cline{2-3}
+ziemlich d"amlich & purpur & gro"s \\ \hline\hline
+\end{tabular}
+
+Als Gesamtgröße für die reine Datenmenge wird in etwa 13,5 MB angenommen (bei 1000Byte = 1 KByte).\\
+
+Ein weiteres Ziel dieses Praktikums ist, ein Gefühl für die Eintragungsdauer großer Datenmengen zu bekommen und worin die Zeitunterschiede begründet sind.
