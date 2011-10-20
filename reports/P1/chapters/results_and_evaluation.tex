@@ -1,17 +1,30 @@
 \chapter{Ergebnisse und Auswertung}
 \section{Datenbankgröße}
-Der gemessene \texttt{Footprint} unserer leeren Datenbank \texttt{ArchDBS} war 128 MB. Bei genauerer Betrachtung setzt sich die leere Datenbank wie folgt zusammen:\\
+Der gemessene Footprint unserer leeren Datenbank \texttt{ArchDBS} war 128 MB. Nach Abruf der Informationen mittels \texttt{list tablespaces show detail} wuchs die Größe der Datenbank auf 160 MB an. Bei genauerer Betrachtung setzt sich die leere Datenbank wie folgt zusammen (Tabelle \ref{tbl:footprint}):\\
 
---ToDo Table pagesize--\\
+\begin{longtable}{|l|c|c|c|r|} \hline
+& Syscatspace & Tempspace1 & Userspace1 & Systoolspace\\ \hline
+Seiten insgesamt & 24576 & 1 & 8192 & 8192 \\ \hline
+Seitengröße (Byte) & \multicolumn{4}{c|}{jeweils 4096 Bytes} \\ \hline
+Summe(Seite*Größe) & \multicolumn{4}{c|} {167776256 Bytes = 163844 KB = 160,003 MB} \\ \hline
+\caption{Größe der Datenbank bei 1KB = 1024 Byte}
+\label{tbl:footprint}
+\end{longtable}
 
-Die Seitengröße beträgt für alle drei Tablespaces 4096 Byte.\\
+Gründe für die Vergrößerung der Datenbank nach Aufruf des Befehls könnten der Verwaltungsaufwand der Datenbank zur Ermittlung der Tabellendetails sein.\\
 
-Nach Abruf der Informationen mittels \texttt{list tablespaces show detail} wuchs die Größe der Datenbank allerdings auf 160 MB an. Gründe dafür könnten der Verwaltungsaufwand der Datenbank zur Ermittlung der Tabellendetails sein.\\
-
-Nach der Erzeugung der Testdaten war die Datenbank 192 MB groß. Unsere errechnete Größe lag allerdings bei 183 MB (160 MB + 13.5 MB). Der Fehler beträgt somit unter fünf Prozent. Die Differenz ist hat (hauptsächlich) zwei Ursachen, welche daraus resultieren, dass wir lediglich die genaue Größe der reinen Datenmenge berechnet haben, aber nicht den Overhead eingerechnet haben. Zum einen werden noch die drei Indexe für \texttt{Kunde}, \texttt{Produkt} und \texttt{Bestellung} (mit 750000 Datensätzen) in der Datenbank angelegt, zum anderen werden auch die Seiten nicht zu genau 100 Prozent befüllt. Wenn der Datensatz nicht mehr auf eine Seite passt, wird der freie Restspeicherplatz leer gelassen und die nächste Seite erzeugt. Dadurch beanspruchen die Daten insgesamt mehr Speicherplatz als in unserer Rechnung.\\
+Nach der Erzeugung der Testdaten war die Datenbank 192 MB groß. Unsere errechnete Größe lag allerdings bei 183 MB (160 MB + 13.5 MB). Der Fehler beträgt somit unter fünf Prozent. Die Differenz hat (hauptsächlich) zwei Ursachen, welche daraus resultieren, dass wir lediglich die genaue Größe der reinen Datenmenge berechnet haben, aber nicht den Overhead eingerechnet haben. Zum einen werden noch die drei Indexe für \texttt{Kunde}, \texttt{Produkt} und \texttt{Bestellung} (mit 750000 Datensätzen) in der Datenbank angelegt, zum anderen werden auch die Seiten nicht zu genau 100 Prozent befüllt. Wenn der Datensatz nicht mehr auf eine Seite passt, wird der freie Restspeicherplatz leer gelassen und die nächste Seite erzeugt. Dadurch beanspruchen die Daten insgesamt mehr Speicherplatz als in unserer Rechnung.\\
 
 \section{Zeitliche Messungen}
-Folgende Tabelle stellt die gemessenen Werte dar:\\
---ToDo Tabelle mit Werten--\\
+Folgende Tabelle stellt die gemessenen Werte dar:
 
-In dieser Tabelle ist zu sehen, dass das Eintragen in die Tabellen der Datenbank \texttt{ArchDBS} wesentlich länger dauert.
+\begin{longtable}{|l|l|r|r|} \hline
+& SSD-Platte & mechan. Platte \\ \hline
+mit angelegtem ForeignKey-Index(\texttt{ArchDBS}) & 2:25 Minuten & 3:01 Minuten \\ \hline
+ohne ForeignKey-Index(\texttt{ArchDB2}) & 1:24 Minuten & todo \\ \hline
+\caption{Messwerte für die Eintragunsdauer der Testdaten}
+\end{longtable}
+
+In dieser Tabelle ist zu sehen, dass das Eintragen in die Tabellen der Datenbank \texttt{ArchDBS} wesentlich länger dauert. Die gemessenen Werte stimmen auch mit unseren Erwartungen überein. Beim Eintragen der Daten ohne Fremdschlüsselindex muss das Datenbanksystem nicht überprüfen, ob die Schlüssel für \texttt{Kunde} und \texttt{Produkt} existieren und spart dadurch schon mindestens 750 000 Vergleiche. \\
+
+Das nachträgliche Erzeugen des Fremdschlüsselindexes lief allerdings viel schneller ab als wir es erwartet haben. Die Aktion dauerte lediglich 4 Sekunden. Wir haben angenommen, dass alle Fremdschlüsselindexe nochmal angelegt werden müssen, ebenso für die 750 000 Bestellungen. Allerdings haben wir nicht beachtet, dass lediglich die Tabelle \texttt{Bestellung} Fremdschlüsselindexe auf die anderen beiden Tabellen besitzt. Dadurch werden maximal 1100 Keys überprüft, was nur im Vergleich zu 750 000 ein kleiner Bruchteil ist. Ebenso wird mit anlegen der Tabellen \texttt{Kunde} und \texttt{Produkt} Primary-Key-Indexe angelegt. Dadurch findet die nachträgliche Suche nach den vorhandenen Einträgen in der Datenbank wesentlich schneller statt.

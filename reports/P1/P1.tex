@@ -1,7 +1,7 @@
 %Erzeugt mit dem LaTeX-Generator: http://latex.sehnot.de
 
 %Schriftgröße, Layout, Papierformat, Art des Dokumentes
-\documentclass[10pt,oneside,a4paper]{scrbook}
+\documentclass[12pt,oneside,a4paper]{scrbook}
 
 %Einstellungen der Seitenränder
 \usepackage[left=3cm,right=4cm,top=1cm,bottom=1cm,includeheadfoot]{geometry}
@@ -17,6 +17,9 @@
 \pagestyle{fancy}
 \fancyhf{}
 
+%Paket Longtable
+\usepackage{longtable}
+
 %Kopfzeile rechts bzw. außen
 \fancyhead[R]{\today}
 %Linie oben
@@ -26,6 +29,14 @@
 \fancyfoot[C]{\thepage}
 %Linie unten
 \renewcommand{\footrulewidth}{0.5pt}
+
+%Bildpaket
+\usepackage{graphicx}
+
+%Verlinkung
+\usepackage[unicode]{hyperref} 
+
+\usepackage{url}       % URLs im Literaturverzeichnis
 
 \title{Architektur von Datenbanksystemen \\ Praktikumsbericht 1}
 \author{Benedikt Kappes \\ Tuan-Si Tran}
@@ -47,4 +58,20 @@
 \input{chapters/results_and_evaluation.tex}
 \input{chapters/summary.tex}
 
+\newpage
+\chapter{Anhang}
+\section{Byte-Count der Datentypen}
+\begin{figure}[htbp]
+\centering
+\includegraphics[scale=2.0]{images/01_byte_count.png}%
+\caption{Angaben zum Byte-Count, vgl. \cite{IBM-2011a}}%
+\label{app:01}
+\end{figure}
+
+\newpage
+\begin{thebibliography}{-----------}
+\bibitem[IBM-2011a]{IBM-2011a} IBM: {\textit{DB2 Solution Information Center}} URL: \url{http://publib.boulder.ibm.com/infocenter/db2luw/v9r7/index.jsp?topic=/com.ibm.db2.luw.sql.ref.doc/doc/r0000927.html}, zuletzt besucht am 20.10.2011
+
+
+\end{thebibliography}
 \end{document}

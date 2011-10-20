@@ -1,29 +1,40 @@
 \chapter{Vorbereitung}
 Im Laufe des erstens Praktikums muss die Datenbank mit Testdaten befüllt werden. Im Vorfeld soll dabei die Größe der Datenbank geschätzt werden, nachdem die Daten erzeugt und gespeichert worden sind. 
-Dabei wurde mit Hilfe folgender Tabelle [ToDo:cite] die Größe eines Datensatzes ermittelt und mit der Anzahl der zu schreibenden Datensätze multipliziert.
+Dabei wurde mit Hilfe der Tabelle (siehe Anhang \ref{app:01}) die Größe eines Datensatzes ermittelt und mit der Anzahl der zu schreibenden Datensätze multipliziert.\\
 
-Die folgende Auflistung zeigt die Hochrechnung für die drei Tabellen \texttt{Kunde}, \texttt{Produkt} und \texttt{Bestellung} an.\\
-
-\begin{tabular}{|l|l|r|} \hline\hline
-\multicolumn{3}{|l|}{ \textbf{Kunde}}\\
-Spaltenname & Typ & Byte Count\\
+Die folgende Auflistung zeigt die Hochrechnung für die drei Tabellen \texttt{Kunde}, \texttt{Produkt} und \texttt{Bestellung} an (siehe Tabelle \ref{tbl:size_of_data}).
+\begin{longtable}{|l|l|r|r|} \hline
+%\begin{tabular}{|l|l|r|l|} 
+\multicolumn{4}{|l|}{ \textbf{Kunde}}\\
+Spaltenname & Typ & Byte Count & \\
 \hline 
-KNR & Integer & 4 Byte\\
-KNAME & Char & 20 Byte \\ 
-KVORNAME & Char & 15 Byte \\ \hline
-\multicolumn{2}{|r}{} & 100 x 39 Byte\\
-\multicolumn{2}{|r}{} & = 3900 Byte \\ \hline
-\end{tabular}
+KNR & Integer & 4 Byte & \\
+KNAME & Char & 20 Byte & \\ 
+KVORNAME & Char & 15 Byte &\\ \hline
+\multicolumn{2}{|r}{} & 100 x 39 Byte & = 3 900 Byte \\ \hline
 
+\multicolumn{4}{|l|}{ \textbf{Produkt}}\\
+Spaltenname & Typ & Byte Count &\\
+\hline 
+PID & Integer & 4 Byte & \\
+PRODUKTNAME & Char & 20 Byte & \\ 
+PREIS & Decimal(6,2) & 4 Byte & \\ \hline
+\multicolumn{2}{|r}{} & 1000 x 28 Byte & = 28 000 Byte \\ \hline
 
-\begin{tabular}{|l|l|r|} \hline\hline
-\textbf{Typ} & \multicolumn{2}{c|}{\textbf{Stil}}\\
-\hline
-ausgekocht & pink & klein\arrayrulewidth2pt\vline\\
-\cline{2-3}
-ziemlich d"amlich & purpur & gro"s \\ \hline\hline
-\end{tabular}
+\multicolumn{4}{|l|}{ \textbf{Bestellung}}\\
+Spaltenname & Typ & Byte Count &\\ \hline 
+BID & Integer & 4 Byte & \\
+KNR & Integer & 4 Byte & \\ 
+PID & Integer & 4 Byte & \\ 
+DATUM & Date & 4 Byte & \\ 
+STATUS & Smallint & 2 Byte & \\ \hline
+\multicolumn{2}{|r}{} & 750 000 x 18 Byte & = 13 500 000 Byte \\ \hline
+\multicolumn{3}{|r}{Summe} & = 13 531 900 Byte \\ \hline
+%\end{tabular}
+\caption{Berechnung der Größe der Testdaten}
+\label{tbl:size_of_data}
+\end{longtable}
+Als Gesamtgröße für die reine Datenmenge wird in etwa 13,5 MB angenommen (bei 1000Byte = 1 KByte). 
 
-Als Gesamtgröße für die reine Datenmenge wird in etwa 13,5 MB angenommen (bei 1000Byte = 1 KByte).\\
-
-Ein weiteres Ziel dieses Praktikums ist, ein Gefühl für die Eintragungsdauer großer Datenmengen zu bekommen und worin die Zeitunterschiede begründet sind.
+\section*{Fremdschlüsselindex}
+Wird der Fremdschlüsselindex nicht angelegt bei der Erzeugung der Tabelle, sollte das Eintragen der Daten schneller gehen. Nach unseren Erwartungen sollte das nachträgliche Erzeugen des Fremdschlüsselindexes für die Tabelle \texttt{Bestellung} einige Zeit in Anspruch nehmen.
