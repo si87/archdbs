@@ -13,18 +13,32 @@ Summe(Seite*Größe) & \multicolumn{4}{c|} {167776256 Bytes = 163844 KB = 160,00
 
 Gründe für die Vergrößerung der Datenbank nach Aufruf des Befehls könnten der Verwaltungsaufwand der Datenbank zur Ermittlung der Tabellendetails sein.\\
 
-Nach der Erzeugung der Testdaten war die Datenbank 192 MB groß. Unsere errechnete Größe lag allerdings bei 183 MB (160 MB + 13.5 MB). Der Fehler beträgt somit unter fünf Prozent. Die Differenz hat (hauptsächlich) zwei Ursachen, welche daraus resultieren, dass wir lediglich die genaue Größe der reinen Datenmenge berechnet haben, aber nicht den Overhead eingerechnet haben. Zum einen werden noch die drei Indexe für \texttt{Kunde}, \texttt{Produkt} und \texttt{Bestellung} (mit 750000 Datensätzen) in der Datenbank angelegt, zum anderen werden auch die Seiten nicht zu genau 100 Prozent befüllt. Wenn der Datensatz nicht mehr auf eine Seite passt, wird der freie Restspeicherplatz leer gelassen und die nächste Seite erzeugt. Dadurch beanspruchen die Daten insgesamt mehr Speicherplatz als in unserer Rechnung.\\
+Nach der Erzeugung der Testdaten war die Datenbank 192 MB groß. Unsere errechnete Größe lag allerdings bei 172,9 MB (160 MB + 12,9 MB). Der Fehler beträgt somit knappe zehn Prozent. Die Differenz hat hauptsächlich eine Ursache, die darin liegt, dass wir lediglich die genaue Größe der reinen Datenmenge berechnet haben, aber dabei die Größe der Index-Daten für die Tabellen vernachlässigen. Nach genauerer Betrachtung ergeben sich für die Indexe folgende Größenwerte, die anhand der Formel aus \cite{IBM-2010} errechnet worden sind.
+
+\begin{longtable}{|l|c|c|c|} \hline
+& \texttt{KUNDE} & \texttt{PRODUKT} & \texttt{BESTELLUNG} \\ \hline
+Byte-Count Index-Attribut & \multicolumn{3}{|c|}{jeweils 4 Bytes} \\ \hline
+Index-Key-Overhead & \multicolumn{3}{|c|}{jeweils 9 Bytes} \\ \hline
+Anzahl Zeilen & 100 & 1000 & 750 000 \\ \hline
+(ByteCount + Overhead)*Zeilen*2 & 2 600 & 26 000 & 19 500 000 \\ \hline \hline
+Summe &  \multicolumn{3}{|c|}{19528600 = ca. 18,6 MB} \\ \hline
+\caption{Berechnung der Größe der Index-Daten}
+\end{longtable}
+
+Dadurch beanspruchen die Daten insgesamt mehr Speicherplatz als in unserer Rechnung. Besonders interessant ist hierbei, dass der Speicherung der Indexe mehr Platz einnehmen, als die Daten an sich.
+
+Werden alle vorhandenen Zahlen addiert, so kommen wir auf 160MB Footprint + 12,9MB Datengröße + 18,6MB Index-Größe = 191,5MB Datenbankgröße und sind somit sehr nah an dem gemessenen Wert der gesamten Datenbankgröße.
 
 \section{Zeitliche Messungen}
 Folgende Tabelle stellt die gemessenen Werte dar:
 
 \begin{longtable}{|l|l|r|r|} \hline
 & SSD-Platte & mechan. Platte \\ \hline
-mit angelegtem ForeignKey-Index(\texttt{ArchDBS}) & 2:25 Minuten & 3:01 Minuten \\ \hline
-ohne ForeignKey-Index(\texttt{ArchDB2}) & 1:24 Minuten & todo \\ \hline
+mit angelegtem ForeignKey-Index(\texttt{ArchDBS}) & 2:25 Minuten & 2:53 Minuten \\ \hline
+ohne ForeignKey-Index(\texttt{ArchDB2}) & 1:24 Minuten & 2:20 Minuten \\ \hline
 \caption{Messwerte für die Eintragunsdauer der Testdaten}
 \end{longtable}
 
-In dieser Tabelle ist zu sehen, dass das Eintragen in die Tabellen der Datenbank \texttt{ArchDBS} wesentlich länger dauert. Die gemessenen Werte stimmen auch mit unseren Erwartungen überein. Beim Eintragen der Daten ohne Fremdschlüsselindex muss das Datenbanksystem nicht überprüfen, ob die Schlüssel für \texttt{Kunde} und \texttt{Produkt} existieren und spart dadurch schon mindestens 750 000 Vergleiche. \\
+In dieser Tabelle ist zu sehen, dass das Eintragen in die Tabellen der Datenbank \texttt{ArchDBS} wesentlich länger dauert. Die gemessenen Werte stimmen auch mit unseren Erwartungen überein. Beim Eintragen der Daten ohne Fremdschlüsselindex muss das Datenbanksystem nicht überprüfen, ob die Schlüssel für \texttt{Kunde} und \texttt{Produkt} existieren und spart dadurch schon jeweils schon 750 000 Vergleiche für \texttt{Produkt} und \texttt{Kunde}. \\
 
-Das nachträgliche Erzeugen des Fremdschlüsselindexes lief allerdings viel schneller ab als wir es erwartet haben. Die Aktion dauerte lediglich 4 Sekunden. Wir haben angenommen, dass alle Fremdschlüsselindexe nochmal angelegt werden müssen, ebenso für die 750 000 Bestellungen. Allerdings haben wir nicht beachtet, dass lediglich die Tabelle \texttt{Bestellung} Fremdschlüsselindexe auf die anderen beiden Tabellen besitzt. Dadurch werden maximal 1100 Keys überprüft, was nur im Vergleich zu 750 000 ein kleiner Bruchteil ist. Ebenso wird mit anlegen der Tabellen \texttt{Kunde} und \texttt{Produkt} Primary-Key-Indexe angelegt. Dadurch findet die nachträgliche Suche nach den vorhandenen Einträgen in der Datenbank wesentlich schneller statt.
+Das nachträgliche Erzeugen des Fremdschlüsselindexes lief allerdings viel schneller ab als wir es erwartet haben. Die Aktion dauerte lediglich 4 Sekunden. Wir haben angenommen, dass alle Fremdschlüsselindexe nochmal angelegt werden müssen, ebenso für die 750 000 Bestellungen. Allerdings haben wir nicht beachtet, dass lediglich die Tabelle \texttt{Bestellung} Fremdschlüsselindexe auf die anderen beiden Tabellen besitzt. Dadurch werden maximal 1100 Keys überprüft und als Fremdschlüsselindex angelegt, was nur im Vergleich zu 750 000 nur ein kleiner Bruchteil ist. Ebenso wird mit anlegen der Tabellen \texttt{Kunde} und \texttt{Produkt} Primary-Key-Indexe angelegt. Infolgedessen findet die nachträgliche Suche nach den vorhandenen Einträgen in der Datenbank wesentlich schneller statt.
