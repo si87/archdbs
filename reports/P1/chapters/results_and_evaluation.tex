@@ -13,7 +13,7 @@ Summe(Seite*Größe) & \multicolumn{4}{c|} {167776256 Bytes = 163844 KB = 160,00
 
 Gründe für die Vergrößerung der Datenbank nach Aufruf des Befehls könnten der Verwaltungsaufwand der Datenbank zur Ermittlung der Tabellendetails sein.\\
 
-Nach der Erzeugung der Testdaten war die Datenbank 192 MB groß. Unsere errechnete Größe lag allerdings bei 172,9 MB (160 MB + 12,9 MB). Der Fehler beträgt somit knappe zehn Prozent. Die Differenz hat hauptsächlich eine Ursache, die darin liegt, dass wir lediglich die genaue Größe der reinen Datenmenge berechnet haben, aber dabei die Größe der Index-Daten für die Tabellen vernachlässigen. Nach genauerer Betrachtung ergeben sich für die Indexe folgende Größenwerte, die anhand der Formel aus \cite{IBM-2010} errechnet worden sind.
+Nach der Erzeugung der Testdaten war die Datenbank 192 MB groß. Unsere errechnete Größe lag allerdings bei 172,9 MB (160 MB + 12,9 MB). Der Fehler beträgt somit knapp zehn Prozent. Die Differenz hat hauptsächlich eine Ursache, die darin liegt, dass wir lediglich die genaue Größe der reinen Datenmenge berechnet haben, aber dabei die Größe der Index-Daten für die Tabellen vernachlässigen. Nach genauerer Betrachtung ergeben sich für die Indexe folgende Größenwerte, die anhand der Formel aus \cite{IBM-2010} errechnet worden sind.
 
 \begin{longtable}{|l|c|c|c|} \hline
 & \texttt{KUNDE} & \texttt{PRODUKT} & \texttt{BESTELLUNG} \\ \hline
