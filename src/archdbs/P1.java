@@ -4,13 +4,24 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Tran & Kappes
  */
 public class P1 {
-    public static void createTestdata() {
+    public P1() {
+        try {
+            Class.forName("com.ibm.db2.jcc.DB2Driver");
+            Connection connection = DriverManager.getConnection("jdbc:db2://localhost:50000/archdbs", "db2inst1", "hda");
+        } catch (Exception ex) {
+            Logger.getLogger(P2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void createTestdata() {
         try {
             // TODO code application logic here
             Class.forName("com.ibm.db2.jcc.DB2Driver");

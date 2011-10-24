@@ -19,6 +19,8 @@ public class ArchDBS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        P1 p1 = new P1();
+        P2 p2 = new P2();
 	
 
         System.out.println("==== Menue ====");
@@ -26,10 +28,11 @@ public class ArchDBS {
         System.out.println("==== P1 ====");
         System.out.println("1 - createTestdata()");
         System.out.println("==== P2 ====");
-        System.out.println("2 - Szenario 1");
-        System.out.println("3 - Szenario 2");
-        System.out.println("4 - Szenario 3");
-        System.out.println("5 - Szenario 4");
+        System.out.println("2 - Szenario 1 - Stmt");
+        System.out.println("3 - Szenario 1 - pStmt");
+        System.out.println("4 - Szenario 2 - zufälliger Einstiegspunkt");
+        System.out.println("5 - Szenario 3 - selben Sätze");
+        System.out.println("6 - Szenario 4 - 10er Pack");
         System.out.println("==== END ====");
         System.out.print("Auswahl: ");
         
@@ -37,19 +40,22 @@ public class ArchDBS {
 	if (scanner.hasNextInt()) {
 		switch(scanner.nextInt()) {
                     case 1:
-                        P1.createTestdata();
+                        p1.createTestdata();
                         break;
                     case 2:
-                        P2.scenarioOne();
+                        p2.scenarioOneStmt(); // true = Stmt
                         break;
                     case 3:
-                        P2.scenarioTwo();
+                        p2.scenarioOnePStmt();
                         break;
                     case 4:
-                        P2.scenarioThree();
+                        p2.scenarioTwo();
                         break;
                     case 5:
-                        P2.scenarioFour();
+                        p2.scenarioThree();
+                        break;
+                    case 6:
+                        p2.scenarioFour();
                         break;
                     default:
                         break;
