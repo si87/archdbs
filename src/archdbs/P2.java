@@ -7,6 +7,7 @@ package archdbs;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
@@ -36,8 +37,12 @@ public class P2 {
             Statement stmt = connection.createStatement();
             for (int i=0; i < 4;i++) {
                 for(int j=0;j<750000;j+=300) {
-                    stmt.execute("SELECT * FROM Bestellung WHERE bid > "+(j)+" AND bid <= "+(j+300)+"");
+                    //stmt.execute("SELECT * FROM Bestellung WHERE bid > "+(j)+" AND bid <= "+(j+300)+"");
                     // SQL kleiner gleich in WHERE ??
+                    ResultSet result = stmt.executeQuery("SELECT * FROM Bestellung WHERE bid > "+(j)+" AND bid <= "+(j+300)+"");
+                    if(!checkResult(result,j+1, j+300)){
+                        System.out.println("Fehler P2.java : scenarioOneStmt -> checkResult");
+                    }
                 }
             }
             Timer.end();
@@ -57,8 +62,12 @@ public class P2 {
                 for(int j=0;j<750000;j+=300) {
                     pStmt.setInt(1, j);
                     pStmt.setInt(2, j+300);
-                    pStmt.execute();
+                    //pStmt.execute();
                     // SQL kleiner gleich in WHERE ??
+                    ResultSet result = pStmt.executeQuery();
+                    if(!checkResult(result,j+1, j+300)){
+                        System.out.println("Fehler P2.java : scenarioOnePStmt -> checkResult");
+                    }
                 }
             }
             Timer.end();
@@ -79,8 +88,12 @@ public class P2 {
                     randomStart = random.nextInt(749700);
                     pStmt.setInt(1, randomStart);
                     pStmt.setInt(2, randomStart+300);
-                    pStmt.execute();
+                    //pStmt.execute();
                     // SQL kleiner gleich in WHERE ??
+                    ResultSet result = pStmt.executeQuery();
+                    if(!checkResult(result,randomStart+1, randomStart+300)){
+                        System.out.println("Fehler P2.java : scenarioTwo -> checkResult");
+                    }
                 }
             }
             Timer.end();
@@ -96,10 +109,15 @@ public class P2 {
             PreparedStatement pStmt = connection.prepareStatement("SELECT * FROM Bestellung WHERE bid > ? AND bid <= ?");
             for (int i=0; i < 4;i++) {
                 for(int j=0;j<750000;j+=300) {
-                    pStmt.setInt(1, 1);
+                    pStmt.setInt(1, 0);
                     pStmt.setInt(2, 300);
-                    pStmt.execute();
+                    //pStmt.execute();
                     // SQL kleiner gleich in WHERE ??
+                    ResultSet result = pStmt.executeQuery();
+                    if(!checkResult(result,1, 300)){
+                        System.out.println("Fehler P2.java : scenarioThree -> checkResult");
+                    }
+                    
                 }
             }
             Timer.end();
@@ -120,11 +138,33 @@ public class P2 {
                     pStmt.setInt(2, j+10);
                     pStmt.execute();
                     // SQL kleiner gleich in WHERE ??
+                    ResultSet result = pStmt.executeQuery();
+                    if(!checkResult(result,j+1, j+10)){
+                        System.out.println("Fehler P2.java : scenarioFour -> checkResult");
+                    }
                 }
             }
             Timer.end();
         } catch (SQLException ex) {
             Logger.getLogger(P2.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public boolean checkResult(ResultSet result, int start, int end){
+        boolean ret = true;
+        int bid;
+        try {
+            while(result.next()){
+               bid = result.getInt(1);
+               if((bid != start)||(bid > end)){
+                   ret = false;
+                   break;
+               }
+               start++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(P2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
 }

@@ -65,7 +65,7 @@ public class ArchDBS {
 		System.out.println("Leider ungültige Eingabe.");
 	}
 
->>>>>>> 12d30066b6e6bb1d17bdaedfabcd2ffccc799779
+
     }
     
     
