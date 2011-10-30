@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,6 +104,41 @@ public class P2 {
         }
     }
     
+     public void scenarioTwo_Test() {
+        try {
+            // ToDo Code here
+            Random random = new Random();
+            List<Integer> order = new LinkedList<Integer>();
+            int randomValue;
+            while(order.size()< 2500){
+                randomValue = random.nextInt(2500);
+                if(!(order.contains(randomValue))){
+                    order.add(randomValue);
+                }
+            }
+            
+            Timer.start("Szenario 2 - zufällige Startpunkt");
+            PreparedStatement pStmt = connection.prepareStatement("SELECT * FROM Bestellung WHERE bid > ? AND bid <= ?");
+            for (int i=0; i < 4;i++) {
+                for(int j=0;j<2500;j++) {
+                    randomValue = (order.get(j)*300);
+                    pStmt.setInt(1, randomValue);
+                    pStmt.setInt(2, randomValue+300);
+                    //pStmt.execute();
+                    // SQL kleiner gleich in WHERE ??
+                    //System.out.println("start: " + randomValue + " end: " + (randomValue+300));
+                    ResultSet result = pStmt.executeQuery();
+                    if(!checkResult(result,randomValue+1, randomValue+300)){
+                        System.out.println("Fehler P2.java : scenarioTwo -> checkResult");
+                    }
+                }
+            }
+            Timer.end();
+        } catch (SQLException ex) {
+            Logger.getLogger(P2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void scenarioThree() {
         try {
             // ToDo Code here
@@ -125,6 +162,8 @@ public class P2 {
             Logger.getLogger(P2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
     
     public void scenarioFour() {
         // ToDo Code here

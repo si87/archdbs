@@ -50,7 +50,7 @@ public class ArchDBS {
                         p2.scenarioOnePStmt();
                         break;
                     case 4:
-                        p2.scenarioTwo();
+                        p2.scenarioTwo_Test();
                         break;
                     case 5:
                         p2.scenarioThree();
