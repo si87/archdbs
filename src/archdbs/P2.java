@@ -175,7 +175,7 @@ public class P2 {
                 for(int j=0;j<750000;j+=10) {
                     pStmt.setInt(1, j);
                     pStmt.setInt(2, j+10);
-                    pStmt.execute();
+                    //pStmt.execute();
                     // SQL kleiner gleich in WHERE ??
                     ResultSet result = pStmt.executeQuery();
                     if(!checkResult(result,j+1, j+10)){
