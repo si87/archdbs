@@ -56,9 +56,10 @@ public class P1 {
             
             // Create all 'Bestellung'
             for(int i=1;i<=750000;i++) {
+                int newPID = ( i % 1000 ) +1;
                 pStmt_Bestellung.setInt(1, i);
                 pStmt_Bestellung.setInt(2, 1);//(i%101)+1);
-                pStmt_Bestellung.setInt(3, 1);//(i%1001)+1);
+                pStmt_Bestellung.setInt(3, newPID);//(i%1001)+1);
                 pStmt_Bestellung.setDate(4, new Date(2011,10,17));
                 pStmt_Bestellung.setInt(5, 1);//i%2);
                 pStmt_Bestellung.execute();

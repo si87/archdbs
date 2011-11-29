@@ -22,6 +22,7 @@ public class ArchDBS {
 
         P1 p1 = new P1();
         P2 p2 = new P2();
+        P4 p4 = new P4();
 	
 
         System.out.println("==== Menue ====");
@@ -34,6 +35,10 @@ public class ArchDBS {
         System.out.println("4 - Szenario 2 - zufälliger Einstiegspunkt");
         System.out.println("5 - Szenario 3 - selben Sätze");
         System.out.println("6 - Szenario 4 - 10er Pack");
+        System.out.println("==== P4 ====");
+        System.out.println("7 - doNestedLoopsJoin");
+        System.out.println("8 - doMergeJoin");
+        System.out.println("9 - doClassicHashJoin");
         System.out.println("==== END ====");
         System.out.print("Auswahl: ");
         
@@ -57,6 +62,15 @@ public class ArchDBS {
                         break;
                     case 6:
                         p2.scenarioFour();
+                        break;
+                    case 7:
+                        p4.doNestedLoopsJoin();
+                        break;
+                    case 8:
+                        p4.doMergeJoin();
+                        break;
+                    case 9:
+                        p4.doClassicHashJoin();
                         break;
                     default:
                         break;
