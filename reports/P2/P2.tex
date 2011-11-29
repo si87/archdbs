@@ -1,0 +1,72 @@
+%Erzeugt mit dem LaTeX-Generator: http://latex.sehnot.de
+
+%Schriftgröße, Layout, Papierformat, Art des Dokumentes
+\documentclass[12pt,oneside,a4paper]{scrbook}
+
+%Einstellungen der Seitenränder
+\usepackage[left=3cm,right=4cm,top=1cm,bottom=1cm,includeheadfoot]{geometry}
+
+%neue Rechtschreibung
+\usepackage{ngerman}
+
+%Umlaute ermöglichen
+\usepackage[utf8]{inputenc}
+
+%Kopf- und Fußzeile
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+
+%Paket Longtable
+\usepackage{longtable}
+
+%Kopfzeile rechts bzw. außen
+\fancyhead[R]{\today}
+%Linie oben
+\renewcommand{\headrulewidth}{0.5pt}
+
+%Fußzeile mittig
+\fancyfoot[C]{\thepage}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+
+%Bildpaket
+\usepackage{graphicx}
+
+%Verlinkung
+\usepackage[unicode]{hyperref} 
+
+\usepackage{url}       % URLs im Literaturverzeichnis
+
+\title{Architektur von Datenbanksystemen \\ Praktikumsbericht 2}
+\author{Benedikt Kappes \\ Tuan-Si Tran}
+
+\makeatletter
+\renewcommand\chapter{\par%
+  \thispagestyle{plain}%
+  \global\@topnum\z@
+  \@afterindentfalse
+  \secdef\@chapter\@schapter}
+\makeatother
+
+
+\begin{document}
+\maketitle
+\input{chapters/introduction.tex}
+\input{chapters/preparation.tex}
+\input{chapters/execution.tex}
+\input{chapters/results_and_evaluation.tex}
+\input{chapters/summary.tex}
+
+\newpage
+\chapter{Anhang}
+
+
+\newpage
+\begin{thebibliography}{-----------}
+\bibitem[IBM-2010]{IBM-2010} IBM: {\textit{IBM DB2 9.7: Database Administration Concepts and Configuration Reference}}. Handbuch, 09.2010, Seite 310f.
+
+\bibitem[IBM-2011]{IBM-2011} IBM: {\textit{DB2 Solution Information Center}} URL: \url{http://publib.boulder.ibm.com/infocenter/db2luw/v9r7/index.jsp?topic=/com.ibm.db2.luw.sql.ref.doc/doc/r0000927.html}, zuletzt besucht am 20.10.2011
+
+\end{thebibliography}
+\end{document}
