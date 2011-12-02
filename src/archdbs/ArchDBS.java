@@ -22,7 +22,6 @@ public class ArchDBS {
 
         P1 p1 = new P1();
         P2 p2 = new P2();
-        P4 p4 = new P4();
 	
 
         System.out.println("==== Menue ====");
@@ -64,13 +63,16 @@ public class ArchDBS {
                         p2.scenarioFour();
                         break;
                     case 7:
-                        p4.doNestedLoopsJoin();
+                        P4 p41 = new P4();
+                        p41.doNestedLoopsJoin();
                         break;
                     case 8:
-                        p4.doMergeJoin();
+                        P4 p42 = new P4();
+                        p42.doMergeJoin();
                         break;
                     case 9:
-                        p4.doClassicHashJoin();
+                        P4 p43 = new P4();
+                        p43.doClassicHashJoin();
                         break;
                     default:
                         break;
