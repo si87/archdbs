@@ -1,7 +1,8 @@
 \chapter{Ergebnisse und Auswertung}
+Folgende Werte wurden bei der Durchführung der Szenarien gemessen (Tabelle \ref{tbl:measure}):
 
 \begin{longtable}{|l|c|c|} \hline
-& SSD & mech \\ \hline
+& SSD in ms & mech. in ms \\ \hline
 Szenario 1.1  & 54245 & 49389 \\ \hline
 Szenario 1.2 & 27466 &  20619 \\ \hline
 Szenario 2 & 38294 & 24468 \\ \hline
@@ -11,3 +12,37 @@ Szenario 4 & 126695 & 121315 \\ \hline
 \label{tbl:measure}
 \end{longtable}
 
+Der Vergleich zwischen Szenario 1.1 und 1.2 zeigt keine Überraschung. Die Implementierung des sequenziellen Lesens mit \texttt{PreparedStatements} ist um etwa 50\% schneller als mit \texttt{Statements}. Das ist darauf zurückzuführen, dass \texttt{PreparedStatements} bereits vorkompiliert auf der Datenbank liegen. Diese müssen daher nicht mehr geparsed werden und können sofort ausgeführt werden. \\
+ 
+Szenario zwei ist um fast 30\% langsamer als Szenario 1.2. Der Grund dafür ist, dass beim sequenziellen Lesen die angeforderten Seiten öfter schon im Puffer vorzufinden sind als bei dem zufalligen Auswählen des Starttupels. Bei genauerer Betrachtung lässt sich folgender Sachverhalt feststellen:
+
+\begin{longtable}{ll}
+Größe eines Tupels aus \texttt{Bestellung} & 18 Byte (vgl. Praktikumsbericht 1) \\
+Größe von 300 Tupeln & 18 Byte * 300 = 5400 Byte \\
+Größe einer Pufferseite & 4096 Byte \footnote{\texttt{SELECT BPNAME FROM SYSCAT.BUFFERPOOLS}; Default Page Size ist ebenso 4KB}  \\
+\end{longtable}
+
+Das Lesen von 300 Tupeln erfordert das Laden von (min.) zwei Seiten aus dem Speicher. Auf eine Seite passen also theoretisch 227 Bestellungstupel (4096 / 18=227; Overhead für TID wurde vernachlässigt).
+Daraus folgt, dass auf der zweiten Seite 73 Tupel aus der ersten Abfrage vorhanden sind. Die restlichen 154 Tupel sind somit schon vom nächsten 300er-Paket (siehe Abbild \ref{fig:tupel}):\\
+
+\begin{figure}[htbp]
+	\begin{center}
+        \includegraphics[scale=0.5]{images/adb.pdf}
+    	\textsf{\caption{Verteilung der Tupel auf die Seiten \label{fig:tupel}}}
+	\end{center}
+\end{figure}
+
+Nach dieser Überlegung muss die Datenbank beim sequenziellen Lesen für das zweite 300er-Pakete also nur eine weitere Seite in den Puffer laden. Dadurch lädt das sequenzielle Lesen immer meistens nur eine oder zwei Seiten nach. 
+Bei Szenario zwei kann dieser Sachverhalt nicht gezielt ausgenutzt werden. In vielen Fällen wird die Zufallszahl auf Tupel zeigen, die nicht direkt auf einer der bereits vorhanden Seiten liegt. Dadurch muss die Datenbank häufiger eine Seite mehr von der Festplatte laden als Szenario 1.2.\\
+
+Beim dritten Szenario betrug die Ausführungsdauer gerade einmal 7156ms. Da wir in diesem Szenario immer die identischen 300 Datensätze lesen, befinden diese sich nach dem ersten Lesen bereits vollständig im Puffer. Das DBMS muss also danach weder von der Festplatte lesen noch sich um das Auslagern der Pufferseiten Gedanken machen. Wie man sehen kann, ist der Unterschied bereits beim Lesen von 3 Millionen Datensätzen signifikant im Vergleich zu den ersten beiden Szenarien. \\
+
+Interessant sind die Messwerte des vierten Szenarios. Dieses Szenario hat mehr als doppelt so lange wie Szenario \textbf{1.1} gebraucht, trotz Verwendung von \texttt{PreparedStatements}. Auch der Puffer ist diesmal nicht der Grund für die große Dauer, da die Seite sich nach der ersten Anfrage eines 10er-Paket bereits im Puffer befinden sollte, auf die bei der nächsten Iteration zugegriffen werden kann. Alleine die Kommunikation zwischen der Anwendung über den Treiber zur Datenbank kostet enorm viel Zeit. Schließlich werden 30 Mal mehr Anfragen an die Datenbank geschickt als in Szenario 1.
+
+\subsection*{Schlussfolgerungen}
+Anhand der Auswertung kommen wir zu folgenden wichtigen Schlussfolgerungen:
+\begin{itemize}
+\item Wenn eine bestimmte SQL-Abfrage sehr häufig benötigt wird und sich Teile des Querys parametrisieren lassen, dann sollte man \texttt{preparedStatements} verwenden.
+\item Die Zeitdifferenz beim Lesen vom Puffer und beim Lesen von der Festplatte ist bereits bei etwa 52 MB \footnote{~13,5 MB* 4, vgl. Datengröße der Tabelle \texttt{Bestellung} aus P1} sehr groß (vgl. Szenario 3 und Szenario 1.2). 
+\item Die Kommunikation zwischen Applikation und Datenbank kostet viel Zeit. Braucht man in der Applikation eine Fragmentierung großer Datenmengen aus der Datenbank, so sollte diese Fragmentierung eher in der Applikation stattfinden, als über die Zerlegung in mehrere SQL-Queries.
+\end{itemize}

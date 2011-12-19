@@ -1,2 +1,4 @@
 \chapter{Vorbereitung}
-Wie stellen wir sicher, dass alle Datensätze gelesen werden?
+In den Szenarien lesen wir über JDBC mit \texttt{SELECT}-Statements 300 Bestellungsdatensätze ( bzw. 10 in Szenario 4) aus. Um auszuschließen, dass die Treiber nur eine Untermenge der Ergebnismenge zurückgeben (falls nicht alle Datensätze benötigt werden), müssen wir zu jeden gewünschten Datensatz mindestens ein Attribut einmal lesend anfassen. 
+
+In unserem Fall wurde die Funktion \texttt{checkResult(resultSet, start, end)} angelegt, die immer die \texttt{BID} jedes Tupels ausliest. Als erstes Argument bekommt diese dabei das \texttt{resultSet} der \texttt{SELECT}-Anfrage übergeben. Als zweites und drittes Argument erhält die Funktion die erste und die letzte angefragte \texttt{BID} des 300er-Tupels. Die Funktion durchläuft dann in einer Schleife für i=start bis i=end das \texttt{resultSet} und vergleicht, ob das Attribut \texttt{BID} der Variable i entspricht. Damit überprüfen wir gleichzeitig auf die richtige Anzahl als auch auf die richtigen Datensätze. Der Code dieser Funktion befindet sich im Anhang.

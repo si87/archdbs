@@ -1,6 +1,12 @@
 \chapter{Durchführung}
-Als erstes wurde die automatische Leistungsoptimierung der DB2-Datenbank abgeschaltet, um reproduzierbare Ergebnisse zu erhalten. Danach wurde Szenario 1.1 implementiert. Dabei wurde nur mit der Klasse \texttt{Statement} gearbeitet. Erst in Szenario 1.2 wurden \texttt{PreparedStatement}s verwendet. Das Lesen von 300er Portionen wurde anhand einer Zählvariable realisiert, die in jedem Durchlauf um 300 erhöht und in der \texttt{WHERE}-Klausel angegeben wird. Dabei machen wir uns zu Nutze, dass wir beim Eintragen der Bestellungsdaten für die ID eine fortlaufende Sequenz verwenden.
+Als erstes wurde die automatische Leistungsoptimierung der DB2-Datenbank abgeschaltet, um reproduzierbare Ergebnisse zu erhalten. Danach wurde Szenario 1.1 implementiert. Dabei wurde nur mit der Klasse \texttt{Statement} gearbeitet. Erst in Szenario 1.2 wurden \texttt{PreparedStatement}s verwendet. Das Lesen von 300er Portionen wurde anhand einer Zählvariable realisiert, die in jedem Durchlauf um 300 erhöht und in der \texttt{WHERE}-Klausel angegeben wird. Dabei machen wir uns zu Nutze, dass wir beim Eintragen der Bestellungsdaten für die ID eine fortlaufende Sequenz verwenden. Das resultierende SQL-Statement sieht dabei folgendermaßen aus: \\
 
-Szenario 2?
+\texttt{SELECT * FROM Bestellung WHERE bid <= ? AND bid => ?}\\
 
-Für das dritte Szenario wurden immer nur die ersten 300 Bestellungsdatensätze gelesen. Für das vierte Szenario wurden die Datensätze in 10er-Tupel gelesen. Dabei wurden die verschachtelten Schleifen angepasst.
+Für die nachfolgenden Szenarien wurden dann nur noch der korrekte Wertebereich für die beiden Platzhalter eingetragen.
+
+Für Szenario 2 wurde dabei eine Zufallszahl zwischen 0 und 2500 erzeugt und mit 300 multipliziert um den Offset jedes 300er-Päckchen bestimmen zu können. 
+
+Für das dritte Szenario wurden immer nur die ersten 300 Bestellungsdatensätze gelesen, d.h. für die beiden Platzhalter wurden immer die 1 und 300 eingetragen. 
+
+Für das vierte Szenario wurden die Datensätze in 10er-Tupel gelesen. Dabei wurden die verschachtelten Schleifen angepasst.

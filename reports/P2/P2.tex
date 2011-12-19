@@ -38,6 +38,10 @@
 
 \usepackage{url}       % URLs im Literaturverzeichnis
 
+\usepackage{listings} % Listings
+
+\usepackage{graphicx} %pdf bilder
+
 \title{Architektur von Datenbanksystemen \\ Praktikumsbericht 2}
 \author{Benedikt Kappes \\ Tuan-Si Tran}
 
@@ -60,13 +64,27 @@
 
 \newpage
 \chapter{Anhang}
-
+\begin{lstlisting}
+    public boolean checkResult(ResultSet result, int start, int end){
+        boolean ret = true;
+        int bid;
+        try {
+            while(result.next()){
+               bid = result.getInt(1);
+               if((bid != start)||(bid > end)){
+                   ret = false;
+                   break;
+               }
+               start++;
+            }
+        } catch (SQLException ex) {
+            [...]
+        }
+        return ret;
+    }
+\end{lstlisting}
 
 \newpage
 \begin{thebibliography}{-----------}
-\bibitem[IBM-2010]{IBM-2010} IBM: {\textit{IBM DB2 9.7: Database Administration Concepts and Configuration Reference}}. Handbuch, 09.2010, Seite 310f.
-
-\bibitem[IBM-2011]{IBM-2011} IBM: {\textit{DB2 Solution Information Center}} URL: \url{http://publib.boulder.ibm.com/infocenter/db2luw/v9r7/index.jsp?topic=/com.ibm.db2.luw.sql.ref.doc/doc/r0000927.html}, zuletzt besucht am 20.10.2011
-
 \end{thebibliography}
 \end{document}
